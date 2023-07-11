@@ -33,8 +33,11 @@ if exist "%reference_output%" (
  rmdir /s /q "%reference_output%"
 )
 
+if not exist ".\.nuget" mkdir ".\.nuget"
+if not exist ".\.nuget\nuget.exe" powershell -Command "$ProgressPreference = 'SilentlyContinue' ; Invoke-WebRequest https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile .\.nuget\nuget.exe"
+
 mkdir %reference_output%\package
-nuget install Microsoft.Windows.CppWinRT -o %reference_output%\package
+.\.nuget\nuget.exe install Microsoft.Windows.CppWinRT -o %reference_output%\package
 set reference_cppwinrt=
 for /F "delims=" %%a in ('dir /s /b %reference_output%\package\cppwinrt.exe') DO set reference_cppwinrt=%%a
 if "%reference_cppwinrt%"=="" (
